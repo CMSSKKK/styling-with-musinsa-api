@@ -30,9 +30,9 @@ public class SearchController {
     }
 
     /*
-     * (필수)한 브랜드에서 모든 카테고리의 상품을 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
+     * (필수) 한 브랜드에서 모든 카테고리의 상품을 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
      * */
-    @GetMapping("/brands/min/{id}")
+    @GetMapping("/brands/{id}")
     public TotalLowestPriceOfBrand searchBrandMinTotalPrice(@PathVariable Long id) {
         return itemService.searchLowestPriceOfBrand(id);
     }
@@ -42,18 +42,7 @@ public class SearchController {
     * */
     @GetMapping("/categories/{categoryId}")
     public MaxAndMinSimpleData searchMaxAndMinData(@PathVariable Long categoryId) {
-        ItemSimpleData max = priceInfoService.findSimpleDataByCategory(categoryId, Statistics.MAX);
-        ItemSimpleData min = priceInfoService.findSimpleDataByCategory(categoryId, Statistics.MIN);
-        return new MaxAndMinSimpleData(max, min);
-    }
-
-
-    /*
-     * 각 카테고리 이름으로 최소 또는 최대 가격 조회 API
-     * */
-    @GetMapping("/categories/{categoryId}")
-    public ItemSimpleData searchMinOrMaxItem(@PathVariable Long categoryId, Statistics statistics) {
-        return priceInfoService.findSimpleDataByCategory(categoryId, statistics);
+        return priceInfoService.findSimpleDataByCategory(categoryId);
     }
 
 }

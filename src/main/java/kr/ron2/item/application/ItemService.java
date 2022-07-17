@@ -65,6 +65,7 @@ public class ItemService {
                 .orElseThrow(() -> new NoSuchElementException("찾으시는 상품이 없습니다."));
 
         item.updatePrice(price);
+        Events.raise(new ItemUpsertEvent(item));
     }
 
     private Integer sum(List<LowestPriceInfo> infos) {

@@ -8,6 +8,7 @@ import kr.ron2.search.domain.PriceInfo;
 import kr.ron2.search.domain.PriceInfoRepository;
 import kr.ron2.search.domain.Statistics;
 import kr.ron2.search.ui.dto.ItemSimpleData;
+import kr.ron2.search.ui.dto.MaxAndMinSimpleData;
 import kr.ron2.search.ui.dto.PriceInfoDto;
 import kr.ron2.search.ui.dto.PriceInfosResponse;
 import lombok.RequiredArgsConstructor;
@@ -71,10 +72,11 @@ public class PriceInfoService {
         return new PriceInfosResponse(infoDtos, totalSum(priceInfos));
     }
 
-    @Transactional(readOnly = true)
-    public ItemSimpleData findSimpleDataByCategory(Long categoryId, Statistics statistics) {
-        PriceInfo priceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, statistics);
-        return ItemSimpleData.of(priceInfo);
+
+    public MaxAndMinSimpleData findSimpleDataByCategory(Long categoryId) {
+        PriceInfo minPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MIN);
+        PriceInfo maxPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MAX);
+        return new MaxAndMinSimpleData(ItemSimpleData.of(maxPriceInfo), ItemSimpleData.of(minPriceInfo));
     }
 
     private Integer totalSum(List<PriceInfo> priceInfos) {
