@@ -3,6 +3,7 @@ package kr.ron2.item.ui;
 import kr.ron2.item.application.ItemService;
 import kr.ron2.item.ui.dto.ItemRegisterRequest;
 import kr.ron2.common.model.Money;
+import kr.ron2.item.ui.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +30,15 @@ public class ItemController {
      * (선택) 아이템 가격 업데이트
      * */
     @PostMapping("/{id}")
-    public void updateItem(@PathVariable Long id, @RequestBody Integer price) {
-        itemService.update(id, price);
+    public void updateItem(@PathVariable Long id, @RequestBody ItemUpdateRequest itemUpdateRequest) {
+        itemService.update(id, itemUpdateRequest.getPrice());
     }
 
     /*
      * (선택) 아이템 삭제
      * */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItem(@PathVariable Long id) {
         itemService.remove(id);
     }

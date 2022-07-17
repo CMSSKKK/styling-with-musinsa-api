@@ -51,15 +51,18 @@ public class PriceInfoService {
     public void updateWhenDeleteItem(Item item) {
         Category category = item.getCategory();
         PriceInfo minPriceInfo = priceInfoRepository
-                .findPriceInfoByCategoryIdAndStatistics(category.getId(), Statistics.MIN);
+                .findPriceInfoByCategoryIdAndStatistics(category.getId(), Statistics.MIN)
+                .orElseThrow(() -> new NoSuchElementException("잘못된 정보입니다."));
         PriceInfo maxPriceInfo = priceInfoRepository
-                .findPriceInfoByCategoryIdAndStatistics(category.getId(), Statistics.MAX);
-        Item minItem = itemRepository.findFirstByCategoryIdOrderByPriceDesc(category.getId())
+                .findPriceInfoByCategoryIdAndStatistics(category.getId(), Statistics.MAX)
+                .orElseThrow(() -> new NoSuchElementException("잘못된 정보입니다."));
+        Item minItem = itemRepository.findFirstByCategoryIdOrderByPriceAsc(category.getId())
                 .orElseThrow(()-> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
-        Item maxItem = itemRepository.findFirstByCategoryIdOrderByPriceAsc(category.getId())
+        Item maxItem = itemRepository.findFirstByCategoryIdOrderByPriceDesc(category.getId())
                 .orElseThrow(()-> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
         minPriceInfo.update(minItem);
         maxPriceInfo.update(maxItem);
+
     }
 
     @Transactional(readOnly = true)
@@ -74,8 +77,10 @@ public class PriceInfoService {
 
 
     public MaxAndMinSimpleData findSimpleDataByCategory(Long categoryId) {
-        PriceInfo minPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MIN);
-        PriceInfo maxPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MAX);
+        PriceInfo minPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MIN)
+                .orElseThrow(() -> new NoSuchElementException("찾은시는 카테고리가 없습니다."));
+        PriceInfo maxPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MAX)
+                .orElseThrow(() -> new NoSuchElementException("찾은시는 카테고리가 없습니다."));
         return new MaxAndMinSimpleData(ItemSimpleData.of(maxPriceInfo), ItemSimpleData.of(minPriceInfo));
     }
 

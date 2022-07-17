@@ -1,12 +1,10 @@
 package kr.ron2.search.ui;
 
 import kr.ron2.item.application.ItemService;
-import kr.ron2.search.ui.dto.MaxAndMinSimpleData;
-import kr.ron2.search.ui.dto.TotalLowestPriceOfBrand;
 import kr.ron2.search.application.PriceInfoService;
-import kr.ron2.search.domain.Statistics;
-import kr.ron2.search.ui.dto.ItemSimpleData;
+import kr.ron2.search.ui.dto.MaxAndMinSimpleData;
 import kr.ron2.search.ui.dto.PriceInfosResponse;
+import kr.ron2.search.ui.dto.TotalLowestPriceOfBrand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

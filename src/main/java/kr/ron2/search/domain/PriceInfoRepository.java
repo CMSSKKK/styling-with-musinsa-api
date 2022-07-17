@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PriceInfoRepository extends JpaRepository<PriceInfo, Long> {
 
@@ -11,6 +12,6 @@ public interface PriceInfoRepository extends JpaRepository<PriceInfo, Long> {
 
     List<PriceInfo> findAllByCategoryId(Long categoryId);
 
-    PriceInfo findPriceInfoByCategoryIdAndStatistics(Long categoryId, Statistics statistics);
+    Optional<PriceInfo> findPriceInfoByCategoryIdAndStatistics(Long categoryId, Statistics statistics);
 
 }

@@ -30,10 +30,10 @@ public class ItemService {
     @Transactional
     public void save(Long categoryId, Long brandId, Money price) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
 
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("브랜드 정보가 잘못되었습니다."));
         Item item = itemRepository.save(Item.from(category, brand, price));
         Events.raise(new ItemUpsertEvent(item));
     }
