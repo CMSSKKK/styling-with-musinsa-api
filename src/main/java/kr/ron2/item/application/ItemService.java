@@ -32,7 +32,7 @@ public class ItemService {
     private final BrandRepository brandRepository;
 
     @Transactional
-    public Item save(Long categoryId, Long brandId, Money price) {
+    public void save(Long categoryId, Long brandId, Money price) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(NoSuchElementException::new);
 
@@ -40,20 +40,21 @@ public class ItemService {
                 .orElseThrow(NoSuchElementException::new);
         Item item = itemRepository.save(Item.from(category, brand, price));
         Events.raise(new PriceInfoUpdateEvent(item));
-
-        return item;
     }
 
     public LowestPricesResponse lowestPriceInfos() {
         List<LowestPriceInfo> lowestPriceInfos = itemRepository.searchLowestPriceInfoGroupByCategoryAndBrand();
         Map<String, List<LowestPriceInfo>> groupedByCategory = groupingByCategory(lowestPriceInfos);
-        List<LowestPriceInfo> extractedInfos= extractPriceInfos(groupedByCategory);
+        List<LowestPriceInfo> extractedInfos = extractPriceInfos(groupedByCategory);
 
         return new LowestPricesResponse(extractedInfos, sum(extractedInfos));
     }
 
     public TotalLowestPriceOfBrand searchLowestPriceOfBrand(Long brandId) {
         List<LowestPriceInfo> lowestPriceInfosByBrand = itemRepository.findLowestPriceInfosByBrand(brandId);
+        if (lowestPriceInfosByBrand.isEmpty()) {
+            throw new NoSuchElementException();
+        }
         LowestPriceInfo lowestPriceInfo = lowestPriceInfosByBrand.get(0);
 
         return new TotalLowestPriceOfBrand(lowestPriceInfo.getBrandName(), sum(lowestPriceInfosByBrand));

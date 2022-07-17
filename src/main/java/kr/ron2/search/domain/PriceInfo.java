@@ -36,28 +36,6 @@ public class PriceInfo {
     @Convert(converter = MoneyConverter.class)
     private Money price;
 
-    public static PriceInfo createMax(Item item) {
-        return new PriceInfo(null,
-                item.getCategory().getId(),
-                item.getCategory().getName(),
-                item.getBrand().getId(),
-                item.getBrand().getName(),
-                Statistics.MAX,
-                item.getId(),
-                item.getPrice());
-    }
-
-    public static PriceInfo creatMin(Item item) {
-        return new PriceInfo(null,
-                item.getCategory().getId(),
-                item.getCategory().getName(),
-                item.getBrand().getId(),
-                item.getBrand().getName(),
-                Statistics.MIN,
-                item.getId(),
-                item.getPrice());
-    }
-
     public void update(Item item) {
         this.brandId = item.getBrand().getId();
         this.brandName = item.getBrand().getName();
