@@ -11,8 +11,9 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
+    @EntityGraph(attributePaths = {"category", "brand"})
     Optional<Item> findFirstByCategoryIdOrderByPriceAsc(@Param("category_id") Long categoryId);
-
+    @EntityGraph(attributePaths = {"category", "brand"})
     Optional<Item> findFirstByCategoryIdOrderByPriceDesc(@Param("category_id") Long categoryId);
 
     @Query("select new kr.ron2.item.domain.dto.LowestPriceInfo(i.category.name, i.brand.name, min(i.price)) from Item i " +
