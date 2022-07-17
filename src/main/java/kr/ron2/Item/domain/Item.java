@@ -5,12 +5,15 @@ import kr.ron2.category.domain.Category;
 import kr.ron2.model.Money;
 import kr.ron2.model.MoneyConverter;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Item {
 
     @Id
@@ -26,6 +29,5 @@ public class Item {
     @Convert(converter = MoneyConverter.class)
     private Money price;
 
-    private boolean isDeleted;
 
 }
