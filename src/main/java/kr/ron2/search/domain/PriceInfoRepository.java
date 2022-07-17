@@ -11,4 +11,6 @@ public interface PriceInfoRepository extends JpaRepository<PriceInfo, Long> {
 
     List<PriceInfo> findAllByCategoryId(Long categoryId);
 
+    PriceInfo findPriceInfoByCategoryIdAndStatistics(Long categoryId, Statistics statistics);
+
 }
