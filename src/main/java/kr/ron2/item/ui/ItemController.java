@@ -16,11 +16,13 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerNewItem( @RequestBody ItemRegisterRequest itemRegisterRequest) {
+    public void registerNewItem(@RequestBody ItemRegisterRequest itemRegisterRequest) {
         itemService.save(itemRegisterRequest.getCategoryId(),
                 itemRegisterRequest.getBrandId(),
                 new Money(itemRegisterRequest.getPrice()));
     }
+
+
 
 
 }

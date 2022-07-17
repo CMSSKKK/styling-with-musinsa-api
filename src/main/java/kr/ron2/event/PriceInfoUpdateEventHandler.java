@@ -1,5 +1,6 @@
 package kr.ron2.event;
 
+import kr.ron2.item.domain.Item;
 import kr.ron2.search.application.PriceInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -11,9 +12,14 @@ public class PriceInfoUpdateEventHandler {
 
     private final PriceInfoService priceInfoService;
 
-    @EventListener(PriceInfoUpdateEvent.class)
-    public void handle(PriceInfoUpdateEvent event) {
+    @EventListener(ItemUpsertEvent.class)
+    public void handleItemUpsertEvent(ItemUpsertEvent event) {
         priceInfoService.update(event.getItem());
+    }
+
+    @EventListener(ItemRemoveEvent.class)
+    public void handleItemRemoveEvent(ItemRemoveEvent event) {
+        priceInfoService.check(event.getItem());
     }
 
 }

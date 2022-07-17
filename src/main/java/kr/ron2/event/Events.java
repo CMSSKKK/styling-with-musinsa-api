@@ -1,5 +1,6 @@
 package kr.ron2.event;
 
+import kr.ron2.item.domain.Item;
 import org.springframework.context.ApplicationEventPublisher;
 
 public class Events {
@@ -10,7 +11,7 @@ public class Events {
         Events.publisher = publisher;
     }
 
-    public static void raise(PriceInfoUpdateEvent event) {
+    public static void raise(Event event) {
         if(publisher != null) {
             publisher.publishEvent(event);
         }

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PriceInfoUpdateEvent {
+public class ItemUpsertEvent implements Event {
 
     private Item item;
 }
