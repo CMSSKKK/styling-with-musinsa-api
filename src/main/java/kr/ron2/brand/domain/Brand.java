@@ -1,6 +1,6 @@
 package kr.ron2.brand.domain;
 
-import kr.ron2.Item.domain.Item;
+import kr.ron2.item.domain.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

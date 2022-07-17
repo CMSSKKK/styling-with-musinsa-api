@@ -1,4 +1,4 @@
-package kr.ron2.Item.domain;
+package kr.ron2.item.domain;
 
 import kr.ron2.brand.domain.Brand;
 import kr.ron2.category.domain.Category;

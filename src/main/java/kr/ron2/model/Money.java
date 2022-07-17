@@ -15,4 +15,8 @@ public class Money {
     public boolean isBiggerThan(Money money) {
         return this.value > money.getValue();
     }
+
+    public Money plus(Money money) {
+        return new Money(this.value + money.getValue());
+    }
 }
