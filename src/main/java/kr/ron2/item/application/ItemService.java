@@ -3,6 +3,7 @@ package kr.ron2.item.application;
 import kr.ron2.item.domain.ItemRepository;
 import kr.ron2.item.domain.dto.LowestPriceInfo;
 import kr.ron2.item.ui.dto.LowestPricesResponse;
+import kr.ron2.item.ui.dto.TotalLowestPriceOfBrand;
 import kr.ron2.model.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,13 @@ public class ItemService {
         List<LowestPriceInfo> extractedInfos= extractPriceInfos(groupedByCategory);
 
         return new LowestPricesResponse(extractedInfos, sum(extractedInfos));
+    }
+
+    public TotalLowestPriceOfBrand searchLowestPriceOfBrand(Long brandId) {
+        List<LowestPriceInfo> lowestPriceInfosByBrand = itemRepository.findLowestPriceInfosByBrand(brandId);
+        LowestPriceInfo lowestPriceInfo = lowestPriceInfosByBrand.get(0);
+
+        return new TotalLowestPriceOfBrand(lowestPriceInfo.getBrandName(), sum(lowestPriceInfosByBrand));
     }
 
     private Map<String, List<LowestPriceInfo>> groupingByCategory(List<LowestPriceInfo> infos) {
