@@ -1,8 +1,8 @@
 package kr.ron2.search.domain;
 
 import kr.ron2.item.domain.Item;
-import kr.ron2.model.Money;
-import kr.ron2.model.MoneyConverter;
+import kr.ron2.common.model.Money;
+import kr.ron2.common.model.MoneyConverter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +49,10 @@ public class PriceInfo {
 
     public boolean hasToUpdateMax(Item item) {
         return this.statistics.equals(Statistics.MAX) && !this.price.isBiggerThan(item.getPrice());
+    }
+
+    public Integer priceToInteger() {
+        return this.price.getValue();
     }
 
 

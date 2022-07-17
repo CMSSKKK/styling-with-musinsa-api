@@ -1,4 +1,4 @@
-package kr.ron2.item.ui.dto;
+package kr.ron2.search.ui.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

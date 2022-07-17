@@ -10,8 +10,8 @@ import kr.ron2.event.ItemUpsertEvent;
 import kr.ron2.item.domain.Item;
 import kr.ron2.item.domain.ItemRepository;
 import kr.ron2.item.domain.dto.LowestPriceInfo;
-import kr.ron2.item.ui.dto.TotalLowestPriceOfBrand;
-import kr.ron2.model.Money;
+import kr.ron2.search.ui.dto.TotalLowestPriceOfBrand;
+import kr.ron2.common.model.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +42,7 @@ public class ItemService {
     public TotalLowestPriceOfBrand searchLowestPriceOfBrand(Long brandId) {
         List<LowestPriceInfo> lowestPriceInfosByBrand = itemRepository.findLowestPriceInfosByBrand(brandId);
         if (lowestPriceInfosByBrand.isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("찾으시는 브랜가 없습니다.");
         }
         LowestPriceInfo lowestPriceInfo = lowestPriceInfosByBrand.get(0);
 
@@ -52,17 +52,26 @@ public class ItemService {
     @Transactional
     public void remove(Long itemId) {
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(NoSuchElementException::new);
-        Events.raise(new ItemRemoveEvent(item));
+                .orElseThrow(() -> new NoSuchElementException("삭제하고자 하는 상품이 없습니다."));
         itemRepository.delete(item);
 
+        Events.raise(new ItemRemoveEvent(item));
+
+    }
+
+    @Transactional
+    public void update(Long itemId, Integer price) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NoSuchElementException("찾으시는 상품이 없습니다."));
+
+        item.updatePrice(price);
     }
 
     private Integer sum(List<LowestPriceInfo> infos) {
         Money money = infos.stream()
                 .map(LowestPriceInfo::getPrice)
                 .reduce(Money::plus)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NullPointerException::new);
 
         return money.getValue();
     }

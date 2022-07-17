@@ -1,6 +1,5 @@
 package kr.ron2.event;
 
-import kr.ron2.item.domain.Item;
 import org.springframework.context.ApplicationEventPublisher;
 
 public class Events {

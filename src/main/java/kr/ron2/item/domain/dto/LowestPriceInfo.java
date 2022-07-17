@@ -1,13 +1,12 @@
 package kr.ron2.item.domain.dto;
 
-import kr.ron2.model.Money;
-import kr.ron2.model.MoneyConverter;
+import kr.ron2.common.model.Money;
+import kr.ron2.common.model.MoneyConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.Convert;
-import java.util.List;
 
 @ToString
 @Getter
@@ -19,7 +18,4 @@ public class LowestPriceInfo {
     @Convert(converter = MoneyConverter.class)
     private Money price;
 
-    public Integer priceToInteger() {
-        return price.getValue();
-    }
 }

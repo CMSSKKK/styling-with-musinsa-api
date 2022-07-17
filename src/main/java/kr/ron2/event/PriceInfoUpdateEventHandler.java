@@ -14,12 +14,12 @@ public class PriceInfoUpdateEventHandler {
 
     @EventListener(ItemUpsertEvent.class)
     public void handleItemUpsertEvent(ItemUpsertEvent event) {
-        priceInfoService.update(event.getItem());
+        priceInfoService.updateWhenUpsertItem(event.getItem());
     }
 
     @EventListener(ItemRemoveEvent.class)
     public void handleItemRemoveEvent(ItemRemoveEvent event) {
-        priceInfoService.check(event.getItem());
+        priceInfoService.updateWhenDeleteItem(event.getItem());
     }
 
 }

@@ -1,4 +1,4 @@
-package kr.ron2.model;
+package kr.ron2.common.model;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
