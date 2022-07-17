@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -55,5 +56,24 @@ public class PriceInfo {
         return this.price.getValue();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PriceInfo priceInfo = (PriceInfo) o;
+        return Objects.equals(id, priceInfo.id)
+                && Objects.equals(categoryId, priceInfo.categoryId)
+                && Objects.equals(categoryName, priceInfo.categoryName)
+                && Objects.equals(brandId, priceInfo.brandId)
+                && Objects.equals(brandName, priceInfo.brandName)
+                && statistics == priceInfo.statistics
+                && Objects.equals(itemId, priceInfo.itemId)
+                && Objects.equals(price, priceInfo.price);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, categoryId, categoryName,
+                brandId, brandName, statistics, itemId, price);
+    }
 }
