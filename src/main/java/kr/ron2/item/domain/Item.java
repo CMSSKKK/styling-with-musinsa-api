@@ -34,7 +34,7 @@ public class Item {
     @Convert(converter = MoneyConverter.class)
     private Money price;
 
-    public static Item from(Category category, Brand brand, Money price) {
+    public static Item of(Category category, Brand brand, Money price) {
         return new Item(null, category, brand, price);
     }
 

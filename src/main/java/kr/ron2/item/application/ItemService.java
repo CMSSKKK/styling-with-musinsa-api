@@ -14,6 +14,7 @@ import kr.ron2.common.model.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,14 +29,14 @@ public class ItemService {
     private final BrandRepository brandRepository;
     private final ApplicationEventPublisher publisher;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void save(Long categoryId, Long brandId, Money price) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
 
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new NoSuchElementException("브랜드 정보가 잘못되었습니다."));
-        Item item = itemRepository.save(Item.from(category, brand, price));
+        Item item = itemRepository.save(Item.of(category, brand, price));
         publisher.publishEvent(new ItemUpsertEvent(item));
     }
 
@@ -43,14 +44,14 @@ public class ItemService {
     public TotalLowestPriceOfBrand searchLowestPriceOfBrand(Long brandId) {
         List<LowestPriceInfo> lowestPriceInfosByBrand = itemRepository.findLowestPriceInfosByBrand(brandId);
         if (lowestPriceInfosByBrand.isEmpty()) {
-            throw new NoSuchElementException("찾으시는 브랜가 없습니다.");
+            throw new NoSuchElementException("찾으시는 브랜드가 없습니다.");
         }
         LowestPriceInfo lowestPriceInfo = lowestPriceInfosByBrand.get(0);
 
         return new TotalLowestPriceOfBrand(lowestPriceInfo.getBrandName(), sum(lowestPriceInfosByBrand));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void remove(Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("삭제하고자 하는 상품이 없습니다."));
@@ -60,7 +61,7 @@ public class ItemService {
 
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void update(Long itemId, Integer price) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("찾으시는 상품이 없습니다."));

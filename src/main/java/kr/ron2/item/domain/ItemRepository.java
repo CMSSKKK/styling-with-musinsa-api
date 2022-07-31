@@ -22,5 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "group by i.category, i.brand having i.brand.id = :brand")
     List<LowestPriceInfo> findLowestPriceInfosByBrand(@Param("brand") Long brandId);
 
-
+    @Override
+    @Query("select i from Item i join fetch i.category join fetch i.brand where i.id = :id")
+    Optional<Item> findById(@Param("id") Long id);
 }

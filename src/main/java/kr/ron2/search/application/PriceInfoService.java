@@ -12,7 +12,9 @@ import kr.ron2.search.ui.dto.MaxAndMinSimpleData;
 import kr.ron2.search.ui.dto.PriceInfoDto;
 import kr.ron2.search.ui.dto.PriceInfosResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,10 +28,10 @@ public class PriceInfoService {
     private final PriceInfoRepository priceInfoRepository;
     private final ItemRepository itemRepository;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateWhenUpsertItem(Item item) {
         Category category = item.getCategory();
-
+        System.out.println("category = " + category);
         List<PriceInfo> priceInfos = priceInfoRepository.findAllByCategoryId(category.getId());
 
         if (priceInfos.isEmpty()) {
@@ -40,14 +42,16 @@ public class PriceInfoService {
         for (PriceInfo priceInfo : priceInfos) {
             if (priceInfo.hasToUpdateMin(item)) {
                 priceInfo.update(item);
+                priceInfoRepository.save(priceInfo);
             }
             if(priceInfo.hasToUpdateMax(item)) {
                 priceInfo.update(item);
+                priceInfoRepository.save(priceInfo);
             }
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateWhenDeleteItem(Item item) {
         Category category = item.getCategory();
         PriceInfo minPriceInfo = priceInfoRepository
@@ -60,9 +64,11 @@ public class PriceInfoService {
                 .orElseThrow(()-> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
         Item maxItem = itemRepository.findFirstByCategoryIdOrderByPriceDesc(category.getId())
                 .orElseThrow(()-> new NoSuchElementException("카테고리 정보가 잘못되었습니다."));
+
         minPriceInfo.update(minItem);
         maxPriceInfo.update(maxItem);
-
+        priceInfoRepository.save(minPriceInfo);
+        priceInfoRepository.save(maxPriceInfo);
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +81,7 @@ public class PriceInfoService {
         return new PriceInfosResponse(infoDtos, totalSum(priceInfos));
     }
 
-
+    @Transactional(readOnly = true)
     public MaxAndMinSimpleData findSimpleDataByCategory(Long categoryId) {
         PriceInfo minPriceInfo = priceInfoRepository.findPriceInfoByCategoryIdAndStatistics(categoryId, Statistics.MIN)
                 .orElseThrow(() -> new NoSuchElementException("찾은시는 카테고리가 없습니다."));
