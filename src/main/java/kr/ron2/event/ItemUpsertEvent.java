@@ -1,12 +1,13 @@
 package kr.ron2.event;
 
 import kr.ron2.item.domain.Item;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
-public class ItemUpsertEvent implements Event {
+@RequiredArgsConstructor
+public class ItemUpsertEvent {
 
-    private Item item;
+    private final Item item;
+
 }

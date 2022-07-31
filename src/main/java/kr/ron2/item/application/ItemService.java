@@ -4,7 +4,6 @@ import kr.ron2.brand.domain.Brand;
 import kr.ron2.brand.domain.BrandRepository;
 import kr.ron2.category.domain.Category;
 import kr.ron2.category.domain.CategoryRepository;
-import kr.ron2.event.Events;
 import kr.ron2.event.ItemRemoveEvent;
 import kr.ron2.event.ItemUpsertEvent;
 import kr.ron2.item.domain.Item;
@@ -13,6 +12,7 @@ import kr.ron2.item.domain.dto.LowestPriceInfo;
 import kr.ron2.search.ui.dto.TotalLowestPriceOfBrand;
 import kr.ron2.common.model.Money;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public void save(Long categoryId, Long brandId, Money price) {
@@ -35,7 +36,7 @@ public class ItemService {
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new NoSuchElementException("브랜드 정보가 잘못되었습니다."));
         Item item = itemRepository.save(Item.from(category, brand, price));
-        Events.raise(new ItemUpsertEvent(item));
+        publisher.publishEvent(new ItemUpsertEvent(item));
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +56,7 @@ public class ItemService {
                 .orElseThrow(() -> new NoSuchElementException("삭제하고자 하는 상품이 없습니다."));
         itemRepository.delete(item);
 
-        Events.raise(new ItemRemoveEvent(item));
+        publisher.publishEvent(new ItemRemoveEvent(item));
 
     }
 
@@ -65,7 +66,7 @@ public class ItemService {
                 .orElseThrow(() -> new NoSuchElementException("찾으시는 상품이 없습니다."));
 
         item.updatePrice(price);
-        Events.raise(new ItemUpsertEvent(item));
+        publisher.publishEvent(new ItemUpsertEvent(item));
     }
 
     private Integer sum(List<LowestPriceInfo> infos) {
